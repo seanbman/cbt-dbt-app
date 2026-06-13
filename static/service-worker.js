@@ -1,13 +1,14 @@
-const CACHE_NAME = "steady-steps-static-v1";
-const STATIC_ASSETS = [
+const CACHE_NAME = "steady-steps-shell-v1";
+const SHELL_ASSETS = [
   "/",
   "/static/css/app.css",
   "/static/js/pwa.js",
   "/static/manifest.webmanifest",
+  "/static/icons/icon.svg",
 ];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS)));
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL_ASSETS)));
 });
 
 self.addEventListener("activate", (event) => {

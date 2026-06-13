@@ -4,28 +4,6 @@
 
 @layer base {
   :root { color-scheme: light; }
-  body { @apply m-0 bg-stone-50 text-slate-800 antialiased; }
-  a { @apply rounded-sm text-emerald-800 underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2; }
-}
-
-@layer components {
-  .skip-link { @apply absolute -left-[999px] top-2 z-10 bg-white px-4 py-2 focus:left-2; }
-  .site-header, .site-footer { @apply border-emerald-100 bg-emerald-50; }
-  .site-header { @apply border-b; }
-  .site-footer { @apply border-t; }
-  .nav-shell, .footer-shell, .page-shell { @apply mx-auto max-w-6xl px-5; }
-  .nav-shell { @apply flex flex-wrap items-center gap-4 py-4; }
-  .brand { @apply text-lg font-extrabold no-underline; }
-  .nav-list { @apply m-0 flex list-none flex-wrap gap-3 p-0; }
-  .help-link { @apply ml-auto font-bold max-sm:ml-0 max-sm:w-full; }
-  .page-shell { @apply min-h-[70vh] py-12 max-sm:py-6; }
-  .hero, .content-card { @apply max-w-3xl rounded-2xl border border-emerald-100 bg-white p-6 shadow-lg shadow-emerald-950/5 sm:p-12; }
-  h1 { @apply my-2 text-4xl font-extrabold leading-tight sm:text-6xl; }
-  .eyebrow { @apply text-xs font-extrabold uppercase tracking-[0.12em] text-emerald-700; }
-  .lede { @apply text-lg; }
-  .actions { @apply mt-6 flex flex-wrap gap-3; }
-  .button { @apply inline-block rounded-lg px-4 py-3 font-bold no-underline; }
-  .primary { @apply bg-emerald-800 text-white; }
-  .secondary { @apply border border-emerald-300 bg-emerald-50; }
-  .footer-shell { @apply flex flex-wrap justify-between gap-4 py-4; }
+  body { @apply bg-stone-50 text-slate-800 antialiased; }
+  a { @apply rounded-sm underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2; }
 }
