@@ -7,6 +7,8 @@ import (
 
 func RegisterRoutes(e *echo.Echo) {
 	e.Static("/static", "static")
+	e.File("/manifest.webmanifest", "static/manifest.webmanifest")
+	e.File("/service-worker.js", "static/service-worker.js")
 
 	e.GET("/", handlers.Home)
 	e.GET("/check-in", handlers.CheckIn)
