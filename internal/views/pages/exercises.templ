@@ -1,13 +1,90 @@
 package pages
 
-import "github.com/seanbman/cbt-dbt-app/internal/views"
+import (
+	"strconv"
 
-templ Exercises() {
+	"github.com/seanbman/cbt-dbt-app/internal/exercises"
+	"github.com/seanbman/cbt-dbt-app/internal/views"
+)
+
+templ Exercises(catalog []exercises.Exercise, categories []exercises.Category, filter exercises.Filter) {
 	@views.Layout("Exercises") {
-		<section class="content-card">
+		<section class="library-header">
 			<p class="eyebrow">Exercise library</p>
 			<h1>Browse exercises</h1>
-			<p>The searchable exercise library will be added in a later phase.</p>
+			<p class="lede">Choose a self-guided activity that fits the moment. Filters work without JavaScript, and worksheet answers stay on your device.</p>
+		</section>
+		<section class="filter-card" aria-labelledby="filter-heading">
+			<h2 id="filter-heading">Filter exercises</h2>
+			<form class="filter-grid" method="get" action="/exercises">
+				<label>Search <input type="search" name="q" value={ filter.Query } placeholder="Try grounding or cravings"/></label>
+				<label>Category
+					<select name="category">
+						<option value="">All categories</option>
+						for _, category := range categories {
+							<option value={ category.ID } selected?={ filter.Category == category.ID }>{ category.Name }</option>
+						}
+					</select>
+				</label>
+				<label>Energy
+					<select name="energy">
+						<option value="">Any energy level</option>
+						<option value="low" selected?={ filter.Energy == exercises.EnergyLow }>Low</option>
+						<option value="medium" selected?={ filter.Energy == exercises.EnergyMedium }>Medium</option>
+						<option value="high" selected?={ filter.Energy == exercises.EnergyHigh }>High</option>
+					</select>
+				</label>
+				<label>Maximum time
+					<select name="maxTime">
+						<option value="">Any length</option>
+						<option value="5" selected?={ filter.MaxTime == 5 }>5 minutes</option>
+						<option value="10" selected?={ filter.MaxTime == 10 }>10 minutes</option>
+						<option value="15" selected?={ filter.MaxTime == 15 }>15 minutes</option>
+					</select>
+				</label>
+				<label>Writing
+					<select name="writing">
+						<option value="">Any writing level</option>
+						<option value="minimal" selected?={ filter.Writing == exercises.WritingMinimal }>Minimal</option>
+						<option value="moderate" selected?={ filter.Writing == exercises.WritingModerate }>Moderate</option>
+						<option value="detailed" selected?={ filter.Writing == exercises.WritingDetailed }>Detailed</option>
+					</select>
+				</label>
+				<label class="checkbox-label"><input type="checkbox" name="printable" value="true" checked?={ filter.PrintableOnly }/> Printable only</label>
+				<div class="filter-actions"><button class="button primary" type="submit">Apply filters</button><a href="/exercises">Clear filters</a></div>
+			</form>
+		</section>
+		<section aria-labelledby="results-heading">
+			<div class="results-heading"><h2 id="results-heading">{ strconv.Itoa(len(catalog)) } exercises</h2></div>
+			if len(catalog) == 0 {
+				<div class="empty-state"><h3>No exercises matched those filters.</h3><p>Try clearing one filter or browse the full library.</p><a class="button secondary" href="/exercises">Clear filters</a></div>
+			} else {
+				<div class="exercise-grid">
+					for _, exercise := range catalog {
+						@exerciseCard(exercise)
+					}
+				</div>
+			}
 		</section>
 	}
+}
+
+templ exerciseCard(exercise exercises.Exercise) {
+	<article class="exercise-card">
+		<div class="tag-row">
+			for _, category := range exercises.CategoriesFor(exercise) {
+				<span class="tag">{ category.Name }</span>
+			}
+		</div>
+		<h3><a href={ templ.URL("/exercises/" + exercise.Slug) }>{ exercise.Title }</a></h3>
+		<p>{ exercise.Summary }</p>
+		<ul class="metadata-list">
+			<li>{ strconv.Itoa(exercise.TimeMinutes) } min</li>
+			<li>{ string(exercise.EnergyRequired) } energy</li>
+			<li>{ string(exercise.WritingLevel) } writing</li>
+			if exercise.Printable {
+				<li>Printable</li>
+			}
+		</ul>
+	</article>
 }

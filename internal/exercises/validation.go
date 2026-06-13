@@ -11,9 +11,10 @@ var slugPattern = regexp.MustCompile(`^[a-z0-9]+(?:-[a-z0-9]+)*$`)
 
 func ValidateCatalog(catalog []Exercise) error {
 	var errs []error
-	ids := map[string]struct{}{}
-	slugs := map[string]struct{}{}
-
+	if err := ValidateCategories(Categories); err != nil {
+		errs = append(errs, err)
+	}
+	ids, slugs := map[string]struct{}{}, map[string]struct{}{}
 	for i, exercise := range catalog {
 		if err := Validate(exercise); err != nil {
 			errs = append(errs, fmt.Errorf("exercise %d: %w", i, err))
@@ -24,10 +25,8 @@ func ValidateCatalog(catalog []Exercise) error {
 		if _, exists := slugs[exercise.Slug]; exercise.Slug != "" && exists {
 			errs = append(errs, fmt.Errorf("duplicate exercise slug %q", exercise.Slug))
 		}
-		ids[exercise.ID] = struct{}{}
-		slugs[exercise.Slug] = struct{}{}
+		ids[exercise.ID], slugs[exercise.Slug] = struct{}{}, struct{}{}
 	}
-
 	return errors.Join(errs...)
 }
 
@@ -45,8 +44,16 @@ func Validate(exercise Exercise) error {
 	if strings.TrimSpace(exercise.Summary) == "" {
 		errs = append(errs, errors.New("summary is required"))
 	}
+	if strings.TrimSpace(exercise.Description) == "" {
+		errs = append(errs, errors.New("description is required"))
+	}
 	if len(exercise.CategoryIDs) == 0 {
 		errs = append(errs, errors.New("at least one category is required"))
+	}
+	for _, categoryID := range exercise.CategoryIDs {
+		if _, ok := CategoryByID(categoryID); !ok {
+			errs = append(errs, fmt.Errorf("unknown category %q", categoryID))
+		}
 	}
 	if len(exercise.IntensityRange) == 0 {
 		errs = append(errs, errors.New("intensity range is required"))
@@ -95,28 +102,22 @@ func Validate(exercise Exercise) error {
 	}
 	return errors.Join(errs...)
 }
-
 func validIntensity(value IntensityLevel) bool {
 	return value == IntensityLow || value == IntensityMedium || value == IntensityHigh
 }
-
 func validEnergy(value EnergyLevel) bool {
 	return value == EnergyLow || value == EnergyMedium || value == EnergyHigh
 }
-
 func validWriting(value WritingLevel) bool {
 	return value == WritingMinimal || value == WritingModerate || value == WritingDetailed
 }
-
 func validInputType(value ExerciseInputType) bool {
 	switch value {
 	case InputReflection, InputShortText, InputLongText, InputChoice, InputScale, InputChecklist, InputNone:
 		return true
-	default:
-		return false
 	}
+	return false
 }
-
 func validLicenseStatus(value LicenseStatus) bool {
 	return value == LicenseOriginalDraft || value == LicenseOriginalReviewed || value == LicenseReviewRequired
 }

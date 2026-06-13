@@ -69,8 +69,12 @@ jobs:
             curl --fail --silent http://127.0.0.1:8080/ >/dev/null && break
             sleep 1
           done
+          curl --fail --silent http://127.0.0.1:8080/exercises | grep 'Browse exercises'
+          curl --fail --silent 'http://127.0.0.1:8080/exercises?category=grounding' | grep 'Five-senses grounding'
+          curl --fail --silent http://127.0.0.1:8080/exercises/thought-check | grep 'Thought check'
+          test "$(curl --silent --output /tmp/exercise-not-found.html --write-out '%{http_code}' http://127.0.0.1:8080/exercises/not-a-real-exercise)" = "404"
+          grep 'That exercise was not found' /tmp/exercise-not-found.html
           curl --fail --silent http://127.0.0.1:8080/help | grep '9-8-8'
-          curl --fail --silent http://127.0.0.1:8080/exercises/example-slug | grep 'example-slug'
           curl --fail --silent http://127.0.0.1:8080/static/css/app.css >/dev/null
           curl --fail --silent http://127.0.0.1:8080/manifest.webmanifest >/dev/null
           curl --fail --silent http://127.0.0.1:8080/service-worker.js >/dev/null

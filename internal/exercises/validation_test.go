@@ -56,10 +56,33 @@ func TestValidateRejectsInvalidExercise(t *testing.T) {
 	}
 }
 
+func TestValidateRejectsUnknownCategory(t *testing.T) {
+	exercise := validExercise()
+	exercise.CategoryIDs = []string{"not-a-real-category"}
+	if err := Validate(exercise); err == nil || !strings.Contains(err.Error(), "unknown category") {
+		t.Fatalf("Validate() error = %v, want unknown category error", err)
+	}
+}
+
 func TestValidateCatalogRejectsDuplicates(t *testing.T) {
 	exercise := validExercise()
 	err := ValidateCatalog([]Exercise{exercise, exercise})
 	if err == nil || !strings.Contains(err.Error(), "duplicate exercise") {
 		t.Fatalf("ValidateCatalog() error = %v, want duplicate exercise error", err)
+	}
+}
+
+func TestInitialCatalogIsValidAndUsefulSize(t *testing.T) {
+	if err := ValidateCatalog(Catalog); err != nil {
+		t.Fatalf("ValidateCatalog(Catalog) returned error: %v", err)
+	}
+	if len(Catalog) < 10 {
+		t.Fatalf("len(Catalog) = %d, want at least 10", len(Catalog))
+	}
+}
+
+func TestCategoryCatalogIsValid(t *testing.T) {
+	if err := ValidateCategories(Categories); err != nil {
+		t.Fatalf("ValidateCategories(Categories) returned error: %v", err)
 	}
 }
