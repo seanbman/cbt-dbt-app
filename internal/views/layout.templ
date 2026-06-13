@@ -18,7 +18,7 @@ templ Layout(title string) {
 			<a class="skip-link" href="#main-content">Skip to content</a>
 			@components.Navigation()
 			<main id="main-content" class="page-shell">
-				@templ.Children(ctx)
+				{ children... }
 			</main>
 			@components.Footer()
 			<script type="module" src="/static/js/pwa.js"></script>
