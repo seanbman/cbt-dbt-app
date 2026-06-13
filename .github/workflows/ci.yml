@@ -22,10 +22,10 @@ jobs:
         run: npm run build:css
       - name: Check browser JavaScript
         run: npm test
-      - name: Tidy Go modules
-        run: go mod tidy
       - name: Generate templ files
         run: go tool templ generate
+      - name: Tidy Go modules
+        run: go mod tidy
       - name: Format Go files
         run: gofmt -w .
       - name: Check whitespace
