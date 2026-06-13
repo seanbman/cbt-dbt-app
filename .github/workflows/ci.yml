@@ -46,7 +46,18 @@ jobs:
       - name: Check whitespace
         run: git diff --check
       - name: Test Go packages
-        run: go test ./...
+        run: |
+          set +e
+          go test ./... > go-test.log 2>&1
+          STATUS=$?
+          cat go-test.log
+          exit $STATUS
+      - name: Upload Go test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: go-test-log
+          path: go-test.log
       - name: Build server
         run: go build -o ./bin/server ./cmd/server
       - name: Smoke-test routes and static assets
