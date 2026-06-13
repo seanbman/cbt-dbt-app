@@ -23,7 +23,18 @@ jobs:
       - name: Check browser JavaScript
         run: npm test
       - name: Generate templ files
-        run: go tool templ generate
+        run: |
+          set +e
+          go tool templ generate > templ-generate.log 2>&1
+          STATUS=$?
+          cat templ-generate.log
+          exit $STATUS
+      - name: Upload templ diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: templ-generate-log
+          path: templ-generate.log
       - name: Tidy Go modules
         run: go mod tidy
       - name: Format Go files
