@@ -1,0 +1,13 @@
+package pages
+
+import "github.com/seanbman/cbt-dbt-app/internal/views"
+
+templ Saved() {
+	@views.Layout("Saved") {
+		<section class="content-card">
+			<p class="eyebrow">Stored on this device</p>
+			<h1>Saved worksheets</h1>
+			<p>A later phase will let you resume or delete locally saved worksheet sessions here.</p>
+		</section>
+	}
+}

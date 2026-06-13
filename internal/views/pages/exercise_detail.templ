@@ -1,0 +1,14 @@
+package pages
+
+import "github.com/seanbman/cbt-dbt-app/internal/views"
+
+templ ExerciseDetail(slug string) {
+	@views.Layout("Exercise") {
+		<section class="content-card">
+			<p class="eyebrow">Exercise placeholder</p>
+			<h1>Exercise details</h1>
+			<p>This page is ready to render the exercise identified by <code>{ slug }</code> once content is added.</p>
+			<a class="button secondary" href="/exercises">Back to exercises</a>
+		</section>
+	}
+}

@@ -1,0 +1,17 @@
+package pages
+
+import "github.com/seanbman/cbt-dbt-app/internal/views"
+
+templ Help() {
+	@views.Layout("Immediate help") {
+		<section class="content-card help-card">
+			<p class="eyebrow">Immediate support</p>
+			<h1>Get immediate help</h1>
+			<p>This app cannot provide emergency or crisis support.</p>
+			<ul>
+				<li>Call <strong>9-1-1</strong> if you or someone else is in immediate danger.</li>
+				<li>Call or text <strong>9-8-8</strong> for suicide crisis support in Canada.</li>
+			</ul>
+		</section>
+	}
+}

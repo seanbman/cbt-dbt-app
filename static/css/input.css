@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root { color-scheme: light; }
+  body { @apply bg-stone-50 text-slate-800 antialiased; }
+  a { @apply rounded-sm underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2; }
+}
