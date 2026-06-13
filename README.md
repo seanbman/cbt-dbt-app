@@ -21,15 +21,15 @@ The product is intended to support original CBT-based, DBT-informed, SMART Recov
 
 ## Local development
 
-On a clean checkout, download the Go module graph and generate templ output before tidying modules so Go can see the generated view packages:
+On a clean checkout, download the Go module graph and tidy modules before generating templ output:
 
 ```bash
 npm install
 npm run build:css
 go mod download github.com/a-h/templ github.com/labstack/echo/v4
 go mod download all
-go tool templ generate
 go mod tidy
+go tool templ generate
 go run ./cmd/server
 ```
 
@@ -41,8 +41,8 @@ Open `http://localhost:8080`.
 gofmt -w .
 go mod download github.com/a-h/templ github.com/labstack/echo/v4
 go mod download all
-go tool templ generate
 go mod tidy
+go tool templ generate
 git diff --check
 go test ./...
 go build ./...

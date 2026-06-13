@@ -26,6 +26,8 @@ jobs:
         run: |
           go mod download github.com/a-h/templ github.com/labstack/echo/v4
           go mod download all
+      - name: Tidy Go modules
+        run: go mod tidy
       - name: Generate templ files
         run: |
           set +e
@@ -39,8 +41,6 @@ jobs:
         with:
           name: templ-generate-log
           path: templ-generate.log
-      - name: Tidy Go modules
-        run: go mod tidy
       - name: Format Go files
         run: gofmt -w .
       - name: Check whitespace
