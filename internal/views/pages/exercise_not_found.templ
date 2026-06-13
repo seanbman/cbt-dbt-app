@@ -1,0 +1,14 @@
+package pages
+
+import "github.com/seanbman/cbt-dbt-app/internal/views"
+
+templ ExerciseNotFound() {
+	@views.Layout("Exercise not found") {
+		<section class="content-card">
+			<p class="eyebrow">Exercise library</p>
+			<h1>That exercise was not found.</h1>
+			<p>The link may be outdated, or the exercise may have moved. The library is still available.</p>
+			<a class="button secondary" href="/exercises">Back to exercise library</a>
+		</section>
+	}
+}
