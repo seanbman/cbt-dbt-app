@@ -1,14 +1,78 @@
 package pages
 
-import "github.com/seanbman/cbt-dbt-app/internal/views"
+import (
+	"strconv"
 
-templ ExerciseDetail(slug string) {
-	@views.Layout("Exercise") {
-		<section class="content-card">
-			<p class="eyebrow">Exercise placeholder</p>
-			<h1>Exercise details</h1>
-			<p>This page is ready to render the exercise identified by <code>{ slug }</code> once content is added.</p>
-			<a class="button secondary" href="/exercises">Back to exercises</a>
-		</section>
+	"github.com/seanbman/cbt-dbt-app/internal/exercises"
+	"github.com/seanbman/cbt-dbt-app/internal/views"
+)
+
+templ ExerciseDetail(exercise exercises.Exercise) {
+	@views.Layout(exercise.Title) {
+		<article class="detail-card">
+			<a class="back-link" href="/exercises">← Back to exercise library</a>
+			<p class="eyebrow">Self-guided exercise</p>
+			<h1>{ exercise.Title }</h1>
+			<p class="lede">{ exercise.Summary }</p>
+			<p>{ exercise.Description }</p>
+			<div class="tag-row">
+				for _, category := range exercises.CategoriesFor(exercise) {
+					<span class="tag">{ category.Name }</span>
+				}
+			</div>
+			<ul class="metadata-list detail-metadata">
+				<li>{ strconv.Itoa(exercise.TimeMinutes) } minutes</li>
+				<li>{ string(exercise.EnergyRequired) } energy</li>
+				<li>{ string(exercise.WritingLevel) } writing</li>
+				if exercise.Printable {
+					<li>Printable</li>
+				}
+			</ul>
+			<section>
+				<h2>Helpful for</h2>
+				<ul>
+					for _, note := range exercise.HelpfulFor {
+						<li>{ note }</li>
+					}
+				</ul>
+			</section>
+			<section>
+				<h2>Pause or choose another option when</h2>
+				<ul>
+					for _, note := range exercise.AvoidWhen {
+						<li>{ note }</li>
+					}
+				</ul>
+			</section>
+			<section class="step-preview">
+				<h2>Guided step preview</h2>
+				<ol>
+					for _, step := range exercise.Steps {
+						<li>
+							<h3>{ step.Title }</h3>
+							<p>{ step.Instruction }</p>
+							if step.Prompt != "" {
+								<p class="prompt">{ step.Prompt }</p>
+							}
+						</li>
+					}
+				</ol>
+			</section>
+			if len(exercise.Tags) > 0 {
+				<section>
+					<h2>Tags</h2>
+					<div class="tag-row">
+						for _, tag := range exercise.Tags {
+							<span class="tag muted">{ tag }</span>
+						}
+					</div>
+				</section>
+			}
+			<p class="privacy-note">Completed worksheet answers will remain on your device. They will not be sent to the server.</p>
+			<div class="detail-actions">
+				<button class="button primary" type="button" disabled>Worksheet runner coming soon</button>
+				<a class="button secondary" href="/exercises">Back to library</a>
+			</div>
+		</article>
 	}
 }
