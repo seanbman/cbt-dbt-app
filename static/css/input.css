@@ -6,6 +6,7 @@
   :root { color-scheme: light; }
   body { @apply m-0 bg-stone-50 text-slate-800 antialiased; }
   a { @apply rounded-sm text-emerald-800 underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2; }
+  input, select, button { @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2; }
 }
 
 @layer components {
@@ -19,13 +20,48 @@
   .nav-list { @apply m-0 flex list-none flex-wrap gap-3 p-0; }
   .help-link { @apply ml-auto font-bold max-sm:ml-0 max-sm:w-full; }
   .page-shell { @apply min-h-[70vh] py-12 max-sm:py-6; }
-  .hero, .content-card { @apply max-w-3xl rounded-2xl border border-emerald-100 bg-white p-6 shadow-lg shadow-emerald-950/5 sm:p-12; }
+  .hero, .content-card, .filter-card, .detail-card { @apply rounded-2xl border border-emerald-100 bg-white p-6 shadow-lg shadow-emerald-950/5 sm:p-10; }
+  .hero, .content-card { @apply max-w-3xl; }
   h1 { @apply my-2 text-4xl font-extrabold leading-tight sm:text-6xl; }
+  h2 { @apply mt-8 text-2xl font-bold; }
+  h3 { @apply text-xl font-bold; }
   .eyebrow { @apply text-xs font-extrabold uppercase tracking-[0.12em] text-emerald-700; }
   .lede { @apply text-lg; }
-  .actions { @apply mt-6 flex flex-wrap gap-3; }
+  .actions, .detail-actions, .filter-actions { @apply mt-6 flex flex-wrap items-center gap-3; }
   .button { @apply inline-block rounded-lg px-4 py-3 font-bold no-underline; }
+  .button:disabled { @apply cursor-not-allowed opacity-60; }
   .primary { @apply bg-emerald-800 text-white; }
   .secondary { @apply border border-emerald-300 bg-emerald-50; }
   .footer-shell { @apply flex flex-wrap justify-between gap-4 py-4; }
+  .library-header { @apply mb-8 max-w-3xl; }
+  .filter-card { @apply mb-8; }
+  .filter-grid { @apply grid gap-4 sm:grid-cols-2 lg:grid-cols-3; }
+  .filter-grid label:not(.checkbox-label) { @apply flex flex-col gap-1 font-bold; }
+  .filter-grid input[type="search"], .filter-grid select { @apply rounded-lg border border-slate-300 bg-white px-3 py-2 font-normal; }
+  .checkbox-label { @apply flex items-center gap-2 font-bold; }
+  .filter-actions { @apply sm:col-span-2 lg:col-span-3; }
+  .results-heading { @apply flex items-center justify-between; }
+  .exercise-grid { @apply grid gap-5 md:grid-cols-2 lg:grid-cols-3; }
+  .exercise-card { @apply rounded-2xl border border-emerald-100 bg-white p-5 shadow-md shadow-emerald-950/5; }
+  .exercise-card h3 { @apply mb-2 mt-4; }
+  .tag-row { @apply flex flex-wrap gap-2; }
+  .tag { @apply rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800; }
+  .tag.muted { @apply bg-slate-100 text-slate-700; }
+  .metadata-list { @apply mt-4 flex list-none flex-wrap gap-2 p-0 text-sm text-slate-600; }
+  .metadata-list li { @apply rounded-full bg-slate-100 px-3 py-1; }
+  .empty-state { @apply rounded-2xl border border-dashed border-emerald-300 bg-emerald-50 p-8; }
+  .detail-card { @apply mx-auto max-w-4xl; }
+  .back-link { @apply inline-block font-bold; }
+  .detail-metadata { @apply mb-8; }
+  .step-preview li { @apply mb-5 rounded-xl border border-emerald-100 p-4; }
+  .step-preview h3 { @apply my-0; }
+  .prompt { @apply font-semibold text-emerald-900; }
+  .privacy-note { @apply mt-8 rounded-xl bg-emerald-50 p-4 font-semibold; }
+}
+
+@media print {
+  .site-header, .site-footer, .detail-actions, .back-link { display: none !important; }
+  .page-shell { max-width: none; padding: 0; }
+  .detail-card { border: 0; box-shadow: none; padding: 0; }
+  body { background: white; color: black; }
 }
