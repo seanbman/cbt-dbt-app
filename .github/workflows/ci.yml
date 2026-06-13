@@ -22,8 +22,10 @@ jobs:
         run: npm run build:css
       - name: Check browser JavaScript
         run: npm test
-      - name: Download direct Go modules
-        run: go mod download github.com/a-h/templ github.com/labstack/echo/v4
+      - name: Download Go module graph
+        run: |
+          go mod download github.com/a-h/templ github.com/labstack/echo/v4
+          go mod download all
       - name: Generate templ files
         run: |
           set +e
