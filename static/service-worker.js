@@ -3,7 +3,7 @@ const SHELL_ASSETS = [
   "/",
   "/static/css/app.css",
   "/static/js/pwa.js",
-  "/static/manifest.webmanifest",
+  "/manifest.webmanifest",
   "/static/icons/icon.svg",
 ];
 
