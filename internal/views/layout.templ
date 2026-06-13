@@ -1,0 +1,27 @@
+package views
+
+import "github.com/seanbman/cbt-dbt-app/internal/views/components"
+
+templ Layout(title string) {
+	<!doctype html>
+	<html lang="en">
+		<head>
+			<meta charset="utf-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<meta name="theme-color" content="#f3f7f4"/>
+			<meta name="description" content="A privacy-first self-guided CBT-based, DBT-informed, and recovery-focused exercise toolbox."/>
+			<link rel="manifest" href="/manifest.webmanifest"/>
+			<link rel="stylesheet" href="/static/css/app.css"/>
+			<title>{ title } · Steady Steps</title>
+		</head>
+		<body>
+			<a class="skip-link" href="#main-content">Skip to content</a>
+			@components.Navigation()
+			<main id="main-content" class="page-shell">
+				{ children... }
+			</main>
+			@components.Footer()
+			<script type="module" src="/static/js/pwa.js"></script>
+		</body>
+	</html>
+}

@@ -1,0 +1,13 @@
+{
+  "name": "cbt-dbt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:css": "tailwindcss -i ./static/css/input.css -o ./static/css/app.css --minify",
+    "check:js": "node --check static/js/indexeddb.js && node --check static/js/pwa.js && node --check static/service-worker.js && node --check static/js/indexeddb.test.js",
+    "test": "npm run check:js && node --test static/js/indexeddb.test.js"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

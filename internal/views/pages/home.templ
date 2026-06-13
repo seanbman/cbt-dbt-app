@@ -1,0 +1,17 @@
+package pages
+
+import "github.com/seanbman/cbt-dbt-app/internal/views"
+
+templ Home() {
+	@views.Layout("Home") {
+		<section class="hero">
+			<p class="eyebrow">Private by design</p>
+			<h1>Take one manageable next step.</h1>
+			<p class="lede">Use a short check-in to find a CBT-based, DBT-informed, or recovery-focused exercise that fits the moment. Your worksheet answers stay on this device.</p>
+			<div class="actions">
+				<a class="button primary" href="/check-in">Start a check-in</a>
+				<a class="button secondary" href="/exercises">Browse exercises</a>
+			</div>
+		</section>
+	}
+}
