@@ -3,11 +3,19 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:css": "tailwindcss -i ./static/css/input.css -o ./static/css/app.css --minify",
-    "check:js": "node --check static/js/indexeddb.js && node --check static/js/pwa.js && node --check static/service-worker.js && node --check static/js/indexeddb.test.js",
-    "test": "npm run check:js && node --test static/js/indexeddb.test.js"
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test src/exercises/catalog.test.js src/routing.test.js"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.11",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-native-web": "^0.19.13"
   },
   "devDependencies": {
-    "tailwindcss": "^3.4.17"
+    "serve": "^14.2.4"
   }
 }
