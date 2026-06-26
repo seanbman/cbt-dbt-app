@@ -10,71 +10,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.25.x'
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - name: Install JavaScript dependencies
         run: npm install
-      - name: Build Tailwind CSS
-        run: npm run build:css
-      - name: Check browser JavaScript
+      - name: Test catalog and routing
         run: npm test
-      - name: Download Go module graph
+      - name: Build React Native Web app
+        run: npm run build
+      - name: Smoke-test static SPA output
         run: |
-          go mod download github.com/a-h/templ github.com/labstack/echo/v4
-          go mod download all
-      - name: Tidy Go modules
-        run: go mod tidy
-      - name: Generate templ files
-        run: |
-          set +e
-          go tool templ generate > templ-generate.log 2>&1
-          STATUS=$?
-          cat templ-generate.log
-          exit $STATUS
-      - name: Upload templ diagnostics
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: templ-generate-log
-          path: templ-generate.log
-      - name: Format Go files
-        run: gofmt -w .
-      - name: Check whitespace
-        run: git diff --check
-      - name: Test Go packages
-        run: |
-          set +e
-          go test ./... > go-test.log 2>&1
-          STATUS=$?
-          cat go-test.log
-          exit $STATUS
-      - name: Upload Go test diagnostics
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: go-test-log
-          path: go-test.log
-      - name: Build server
-        run: go build -o ./bin/server ./cmd/server
-      - name: Smoke-test routes and static assets
-        run: |
-          ./bin/server > /tmp/steady-steps.log 2>&1 &
+          npx serve -s dist -l 4173 > /tmp/steady-steps-static.log 2>&1 &
           SERVER_PID=$!
           trap 'kill $SERVER_PID' EXIT
           for attempt in {1..20}; do
-            curl --fail --silent http://127.0.0.1:8080/ >/dev/null && break
+            curl --fail --silent http://127.0.0.1:4173/ >/dev/null && break
             sleep 1
           done
-          curl --fail --silent http://127.0.0.1:8080/exercises | grep 'Browse exercises'
-          curl --fail --silent 'http://127.0.0.1:8080/exercises?category=grounding' | grep 'Five-senses grounding'
-          curl --fail --silent http://127.0.0.1:8080/exercises/thought-check | grep 'Thought check'
-          test "$(curl --silent --output /tmp/exercise-not-found.html --write-out '%{http_code}' http://127.0.0.1:8080/exercises/not-a-real-exercise)" = "404"
-          grep 'That exercise was not found' /tmp/exercise-not-found.html
-          curl --fail --silent http://127.0.0.1:8080/help | grep '9-8-8'
-          curl --fail --silent http://127.0.0.1:8080/static/css/app.css >/dev/null
-          curl --fail --silent http://127.0.0.1:8080/manifest.webmanifest >/dev/null
-          curl --fail --silent http://127.0.0.1:8080/service-worker.js >/dev/null
+          curl --fail --silent http://127.0.0.1:4173/ | grep 'Steady Steps'
+          curl --fail --silent http://127.0.0.1:4173/exercises | grep 'Steady Steps'
+          curl --fail --silent http://127.0.0.1:4173/exercises/thought-check | grep 'Steady Steps'
+          curl --fail --silent http://127.0.0.1:4173/exercises/not-a-real-exercise | grep 'Steady Steps'
+          curl --fail --silent http://127.0.0.1:4173/help | grep 'Steady Steps'
+          curl --fail --silent http://127.0.0.1:4173/manifest.webmanifest | grep 'Steady Steps'
+          curl --fail --silent http://127.0.0.1:4173/service-worker.js | grep 'CACHE_NAME'
