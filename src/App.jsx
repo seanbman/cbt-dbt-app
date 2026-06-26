@@ -7,7 +7,7 @@ import {
   Text,
   TextInput,
   View,
-} from 'react-native';
+} from 'react-native-web';
 import { categories, categoryById, exercises, filterExercises, findExerciseBySlug } from './exercises/catalog.js';
 import { buildExerciseSearch, parseRoute, readFilterParams, routes } from './routing.js';
 
@@ -314,11 +314,8 @@ function About() {
   return (
     <View style={styles.stackLarge}>
       <Text style={styles.h1}>About Steady Steps</Text>
-      <Text style={styles.lead}>Steady Steps is a self-guided exercise toolbox for reflection, grounding, emotion regulation, urge management, and values-based planning.</Text>
-      <View style={styles.card}>
-        <Text style={styles.h2}>Privacy boundaries</Text>
-        {['No login or account system.', 'No cloud sync for worksheet drafts.', 'No server-side worksheet-answer or check-in storage.', 'No third-party AI processing of user answers.', 'No advertising trackers.'].map((item) => <Text key={item} style={styles.bullet}>• {item}</Text>)}
-      </View>
+      <Text style={styles.lead}>This app is a no-login, privacy-first toolbox for CBT, DBT-informed, SMART Recovery-informed, and recovery-focused exercises.</Text>
+      <Text style={styles.body}>It is designed to help people pick a simple next exercise, use it in the browser, and eventually print or save worksheets locally. It does not diagnose, replace counselling, or provide emergency support.</Text>
     </View>
   );
 }
@@ -326,15 +323,12 @@ function About() {
 function Help() {
   return (
     <View style={styles.stackLarge}>
-      <Text style={styles.h1}>Get immediate help</Text>
-      <Text style={styles.lead}>{crisisCopy}</Text>
-      <View style={styles.card}>
-        <Text style={styles.h2}>This app is not emergency care</Text>
-        <Text style={styles.body}>Use trusted crisis lines, emergency services, a sponsor, a clinician, or a safe person when you need immediate support.</Text>
-        <Pressable onPress={() => Linking.openURL('tel:988')} style={styles.primaryButton}>
-          <Text style={styles.primaryButtonText}>Call 9-8-8</Text>
-        </Pressable>
+      <View style={styles.crisisPanel}>
+        <Text style={styles.h1}>Get immediate help</Text>
+        <Text style={styles.lead}>{crisisCopy}</Text>
+        <Text style={styles.body}>If you are outside Canada or the U.S., contact your local emergency number or nearest emergency department.</Text>
       </View>
+      <Text style={styles.body}>For non-emergency support, consider contacting a trusted person, sponsor, counsellor, doctor, crisis line, or local peer-support group.</Text>
     </View>
   );
 }
@@ -343,9 +337,9 @@ function NotFound({ navigate }) {
   return (
     <View style={styles.stackLarge}>
       <Text style={styles.h1}>Page not found</Text>
-      <Text style={styles.lead}>That route does not exist in the static React Native Web app.</Text>
+      <Text style={styles.lead}>That route does not exist in this static app.</Text>
       <Pressable onPress={() => navigate(routes.home)} style={styles.primaryButton}>
-        <Text style={styles.primaryButtonText}>Go home</Text>
+        <Text style={styles.primaryButtonText}>Back home</Text>
       </Pressable>
     </View>
   );
@@ -354,68 +348,343 @@ function NotFound({ navigate }) {
 function Footer() {
   return (
     <View style={styles.footer}>
-      <Text style={styles.footerText}>Steady Steps is educational self-help content, not clinical or crisis care.</Text>
+      <Text style={styles.footerText}>Steady Steps is not a crisis service. Call 9-1-1 for immediate danger or 9-8-8 for suicide crisis support in Canada/U.S.</Text>
     </View>
   );
 }
 
+const colors = {
+  ink: '#18211f',
+  muted: '#5c6a66',
+  paper: '#f8f5ef',
+  panel: '#ffffff',
+  border: '#d7ddd9',
+  accent: '#2f6258',
+  accentSoft: '#e7f0ed',
+  danger: '#6d2f2f',
+};
+
 const styles = StyleSheet.create({
-  app: { minHeight: '100vh', backgroundColor: '#f5f5f2' },
-  header: { alignItems: 'center', backgroundColor: '#111827', gap: 16, padding: 20 },
-  brand: { color: '#ffffff', fontSize: 24, fontWeight: '800' },
-  nav: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'center' },
-  navLink: { borderColor: '#374151', borderRadius: 999, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8 },
-  navLinkActive: { backgroundColor: '#ffffff' },
-  navText: { color: '#ffffff', fontWeight: '700' },
-  navTextActive: { color: '#111827' },
-  crisisButton: { backgroundColor: '#ffffff', borderRadius: 999, paddingHorizontal: 14, paddingVertical: 10 },
-  crisisButtonText: { color: '#111827', fontWeight: '800' },
-  main: { alignSelf: 'center', maxWidth: 1120, padding: 20, width: '100%' },
-  stackLarge: { gap: 20 },
-  hero: { backgroundColor: '#ffffff', borderRadius: 28, gap: 18, padding: 28 },
-  pageHeader: { gap: 10 },
-  eyebrow: { color: '#4b5563', fontSize: 13, fontWeight: '800', letterSpacing: 1, textTransform: 'uppercase' },
-  h1: { color: '#111827', fontSize: 40, fontWeight: '900', lineHeight: 46 },
-  h2: { color: '#111827', fontSize: 24, fontWeight: '850' },
-  h3: { color: '#111827', fontSize: 19, fontWeight: '850' },
-  lead: { color: '#374151', fontSize: 18, lineHeight: 28 },
-  body: { color: '#374151', fontSize: 16, lineHeight: 24 },
-  grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 },
-  exerciseGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 },
-  card: { backgroundColor: '#ffffff', borderColor: '#e5e7eb', borderRadius: 20, borderWidth: 1, gap: 12, padding: 20 },
-  detailCard: { backgroundColor: '#ffffff', borderColor: '#d1d5db', borderRadius: 24, borderWidth: 1, gap: 14, padding: 24 },
-  exerciseCard: { backgroundColor: '#ffffff', borderColor: '#e5e7eb', borderRadius: 20, borderWidth: 1, gap: 12, padding: 18 },
-  filterPanel: { backgroundColor: '#ffffff', borderRadius: 20, gap: 12, padding: 18 },
-  searchRow: { flexDirection: 'row', gap: 10 },
-  label: { color: '#111827', fontSize: 14, fontWeight: '850', marginTop: 6 },
-  input: { backgroundColor: '#f9fafb', borderColor: '#d1d5db', borderRadius: 14, borderWidth: 1, color: '#111827', flex: 1, fontSize: 16, paddingHorizontal: 14, paddingVertical: 12 },
-  buttonRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  primaryButton: { alignSelf: 'flex-start', backgroundColor: '#111827', borderRadius: 999, paddingHorizontal: 18, paddingVertical: 12 },
-  primaryButtonText: { color: '#ffffff', fontWeight: '850' },
-  secondaryButton: { alignSelf: 'flex-start', backgroundColor: '#ffffff', borderColor: '#d1d5db', borderRadius: 999, borderWidth: 1, paddingHorizontal: 18, paddingVertical: 12 },
-  secondaryButtonActive: { backgroundColor: '#f3f4f6' },
-  secondaryButtonText: { color: '#111827', fontWeight: '850' },
-  smallButton: { backgroundColor: '#111827', borderRadius: 14, justifyContent: 'center', paddingHorizontal: 16 },
-  smallButtonText: { color: '#ffffff', fontWeight: '850' },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { borderColor: '#d1d5db', borderRadius: 999, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8 },
-  chipActive: { backgroundColor: '#111827', borderColor: '#111827' },
-  chipText: { color: '#111827', fontWeight: '750' },
-  chipTextActive: { color: '#ffffff' },
-  tag: { backgroundColor: '#f3f4f6', borderRadius: 999, color: '#374151', fontSize: 13, fontWeight: '750', paddingHorizontal: 10, paddingVertical: 6 },
-  metaRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  meta: { backgroundColor: '#111827', borderRadius: 999, color: '#ffffff', fontSize: 12, fontWeight: '800', overflow: 'hidden', paddingHorizontal: 10, paddingVertical: 5, textTransform: 'uppercase' },
-  cardLink: { alignSelf: 'flex-start', marginTop: 'auto' },
-  cardLinkText: { color: '#111827', fontWeight: '900', textDecorationLine: 'underline' },
-  backLink: { alignSelf: 'flex-start' },
-  stepBlock: { borderTopColor: '#e5e7eb', borderTopWidth: 1, gap: 8, paddingTop: 14 },
-  stepNumber: { color: '#6b7280', fontSize: 12, fontWeight: '850', textTransform: 'uppercase' },
-  prompt: { color: '#111827', fontSize: 16, fontStyle: 'italic', lineHeight: 24 },
-  bullet: { color: '#374151', fontSize: 16, lineHeight: 25 },
-  disabledButton: { alignSelf: 'flex-start', backgroundColor: '#e5e7eb', borderRadius: 999, paddingHorizontal: 18, paddingVertical: 12 },
-  disabledButtonText: { color: '#6b7280', fontWeight: '850' },
-  privacyNote: { color: '#4b5563', fontSize: 14, lineHeight: 22 },
-  resultCount: { color: '#111827', fontSize: 18, fontWeight: '850' },
-  footer: { alignItems: 'center', padding: 20 },
-  footerText: { color: '#4b5563', fontSize: 13 },
+  app: {
+    minHeight: '100vh',
+    backgroundColor: colors.paper,
+  },
+  header: {
+    padding: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    backgroundColor: colors.panel,
+    gap: 16,
+  },
+  brand: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: colors.ink,
+  },
+  nav: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  navLink: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  navLinkActive: {
+    backgroundColor: colors.accentSoft,
+    borderColor: colors.accent,
+  },
+  navText: {
+    color: colors.muted,
+    fontWeight: '700',
+  },
+  navTextActive: {
+    color: colors.accent,
+  },
+  crisisButton: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.danger,
+    borderRadius: 999,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+  },
+  crisisButtonText: {
+    color: '#fff',
+    fontWeight: '800',
+  },
+  main: {
+    width: '100%',
+    maxWidth: 1100,
+    alignSelf: 'center',
+    padding: 24,
+    gap: 24,
+  },
+  stackLarge: {
+    gap: 24,
+  },
+  hero: {
+    backgroundColor: colors.panel,
+    borderRadius: 28,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 28,
+    gap: 18,
+  },
+  pageHeader: {
+    gap: 12,
+  },
+  eyebrow: {
+    color: colors.accent,
+    fontWeight: '800',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+  h1: {
+    fontSize: 36,
+    lineHeight: 42,
+    color: colors.ink,
+    fontWeight: '900',
+  },
+  h2: {
+    fontSize: 24,
+    color: colors.ink,
+    fontWeight: '850',
+  },
+  h3: {
+    fontSize: 20,
+    color: colors.ink,
+    fontWeight: '800',
+  },
+  lead: {
+    fontSize: 18,
+    lineHeight: 28,
+    color: colors.muted,
+  },
+  body: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: colors.muted,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  primaryButton: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.accent,
+    borderRadius: 999,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+  },
+  primaryButtonText: {
+    color: '#fff',
+    fontWeight: '800',
+  },
+  secondaryButton: {
+    alignSelf: 'flex-start',
+    borderColor: colors.accent,
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+  },
+  secondaryButtonActive: {
+    backgroundColor: colors.accentSoft,
+  },
+  secondaryButtonText: {
+    color: colors.accent,
+    fontWeight: '800',
+  },
+  smallButton: {
+    backgroundColor: colors.accent,
+    borderRadius: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
+  smallButtonText: {
+    color: '#fff',
+    fontWeight: '800',
+  },
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+    gap: 16,
+  },
+  card: {
+    backgroundColor: colors.panel,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 20,
+    gap: 12,
+  },
+  filterPanel: {
+    backgroundColor: colors.panel,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 20,
+    gap: 14,
+  },
+  label: {
+    color: colors.ink,
+    fontWeight: '800',
+  },
+  searchRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  input: {
+    flexGrow: 1,
+    minWidth: 220,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 14,
+    padding: 12,
+    color: colors.ink,
+  },
+  chips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  chip: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 999,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: '#fff',
+  },
+  chipActive: {
+    backgroundColor: colors.accentSoft,
+    borderColor: colors.accent,
+  },
+  chipText: {
+    color: colors.muted,
+    fontWeight: '700',
+  },
+  chipTextActive: {
+    color: colors.accent,
+  },
+  resultCount: {
+    fontWeight: '800',
+    color: colors.ink,
+  },
+  exerciseGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+    gap: 16,
+  },
+  exerciseCard: {
+    backgroundColor: colors.panel,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 20,
+    gap: 12,
+  },
+  metaRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  meta: {
+    backgroundColor: colors.accentSoft,
+    color: colors.accent,
+    borderRadius: 999,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    fontWeight: '800',
+  },
+  tag: {
+    color: colors.muted,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 999,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+  },
+  cardLink: {
+    alignSelf: 'flex-start',
+    marginTop: 4,
+  },
+  cardLinkText: {
+    color: colors.accent,
+    fontWeight: '800',
+  },
+  backLink: {
+    alignSelf: 'flex-start',
+  },
+  detailCard: {
+    backgroundColor: colors.panel,
+    borderRadius: 28,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 28,
+    gap: 14,
+  },
+  stepBlock: {
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    paddingTop: 16,
+    gap: 8,
+  },
+  stepNumber: {
+    color: colors.accent,
+    fontWeight: '900',
+  },
+  prompt: {
+    color: colors.ink,
+    fontWeight: '700',
+    backgroundColor: colors.accentSoft,
+    padding: 12,
+    borderRadius: 14,
+  },
+  disabledButton: {
+    alignSelf: 'flex-start',
+    borderRadius: 999,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    backgroundColor: '#d9dddb',
+  },
+  disabledButtonText: {
+    color: colors.muted,
+    fontWeight: '800',
+  },
+  bullet: {
+    color: colors.muted,
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  privacyNote: {
+    color: colors.muted,
+    fontStyle: 'italic',
+    lineHeight: 22,
+  },
+  crisisPanel: {
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#d8b8b8',
+    backgroundColor: '#fff5f5',
+    padding: 24,
+    gap: 14,
+  },
+  footer: {
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    padding: 20,
+    backgroundColor: colors.panel,
+  },
+  footerText: {
+    color: colors.muted,
+    textAlign: 'center',
+    lineHeight: 22,
+  },
 });
