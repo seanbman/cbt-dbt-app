@@ -10,6 +10,7 @@ test('parses top-level routes', () => {
 
 test('parses exercise detail slugs', () => {
   assert.deepEqual(parseRoute('/exercises/thought-check'), { name: 'exercise-detail', slug: 'thought-check' });
+  assert.deepEqual(parseRoute('/exercises/automatic-thought-record'), { name: 'exercise-detail', slug: 'automatic-thought-record' });
 });
 
 test('reads exercise filter params', () => {

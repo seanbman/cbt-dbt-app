@@ -11,7 +11,8 @@ The product supports original CBT-based, DBT-informed, SMART Recovery-inspired, 
 - No server-side worksheet-answer or check-in storage.
 - No third-party AI processing of user answers.
 - No advertising trackers.
-- Sensitive worksheet drafts should stay on the user's device when worksheet saving is added in a later phase.
+- The Automatic Thought Record saves its draft as encrypted ciphertext in a browser cookie using a device-local Web Crypto key.
+- Sensitive worksheet drafts should stay on the user's device unless the project deliberately changes that privacy model later.
 
 ## Requirements
 
@@ -59,16 +60,17 @@ Netlify is configured through `netlify.toml`:
 /
 /check-in
 /exercises
+/exercises/automatic-thought-record
 /exercises/:slug
 /saved
 /about
 /help
 ```
 
-Routing is handled client-side by the React Native Web app. Netlify serves `index.html` for deep links so routes like `/exercises/thought-check` work after deployment.
+Routing is handled client-side by the React Native Web app. Netlify serves `index.html` for deep links so routes like `/exercises/automatic-thought-record` and `/exercises/thought-check` work after deployment.
 
 ## Current scope
 
-The app currently includes the first usable exercise library: a validated static category catalog, 12 original exercises, client-side filtering, exercise detail pages, a calm unknown-slug state, and a PWA manifest/service-worker foundation.
+The app currently includes a validated static exercise library, the flagship Automatic Thought Record worksheet with an emotion-wheel reference and encrypted-cookie draft saving, client-side filtering, exercise detail pages, a calm unknown-slug state, and a PWA manifest/service-worker foundation.
 
-The recommendation engine, full worksheet runner, saved-session management interface, check-in questions, and cloud-backed features remain out of scope. Worksheet answers must stay local to the browser when those features are added.
+The recommendation engine, broader saved-session management interface, and cloud-backed features remain out of scope. Worksheet answers must stay local to the browser unless the project deliberately changes that privacy model later.
