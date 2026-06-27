@@ -161,7 +161,6 @@ function PrintableWorksheet({ record, selectedMoodNames }) {
     <View className="printable-worksheet">
       <View className="print-header">
         <Text className="print-title">Automatic Thought Record</Text>
-        <Text className="print-purpose">Purpose: slow down, name the trigger, identify emotions and thoughts, choose a skillful response, and reflect on what changed.</Text>
       </View>
 
       <View className="print-meta-row">
