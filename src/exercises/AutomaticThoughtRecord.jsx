@@ -4,6 +4,9 @@ import { clearCookie, readEncryptedCookie, writeEncryptedCookie } from '../stora
 import { automaticThoughtRecord, emotionWheelGroups, emptyThoughtRecord } from './automaticThoughtRecord.js';
 
 const cookieName = 'steadyStepsAutomaticThoughtRecord.v1';
+const blank = '________________________________________________________________________________';
+
+const answerText = (value) => String(value ?? '').trim() || blank;
 
 export default function AutomaticThoughtRecord() {
   const [record, setRecord] = useState(emptyThoughtRecord);
@@ -76,75 +79,117 @@ export default function AutomaticThoughtRecord() {
   };
 
   return (
-    <View style={styles.stack} className="print-page">
-      <View style={styles.flagshipPanel} className="print-intro">
-        <Text style={styles.eyebrow}>Flagship CBT exercise</Text>
-        <Text style={styles.h1}>{automaticThoughtRecord.title}</Text>
-        <Text style={styles.lead}>{automaticThoughtRecord.description}</Text>
-        <Text style={styles.privacy}>Your draft is encrypted and saved only on this device. Nothing is sent to a server.</Text>
-      </View>
+    <View style={styles.stack}>
+      <View className="screen-only">
+        <View style={styles.flagshipPanel}>
+          <Text style={styles.eyebrow}>Flagship CBT exercise</Text>
+          <Text style={styles.h1}>{automaticThoughtRecord.title}</Text>
+          <Text style={styles.lead}>{automaticThoughtRecord.description}</Text>
+          <Text style={styles.privacy}>Your draft is encrypted and saved only on this device. Nothing is sent to a server.</Text>
+        </View>
 
-      <WorksheetSection title="1. Situation" prompt="Where were you, who was involved, and what happened?">
-        <BigInput value={record.situation} onChangeText={(value) => updateField('situation', value)} placeholder="Example: I saw the text was left on read after I asked a direct question." />
-      </WorksheetSection>
+        <WorksheetSection title="1. Situation" prompt="Where were you, who was involved, and what happened?">
+          <BigInput value={record.situation} onChangeText={(value) => updateField('situation', value)} placeholder="Example: I saw the text was left on read after I asked a direct question." />
+        </WorksheetSection>
 
-      <WorksheetSection title="2. Moods and emotions" prompt="Select multiple moods from the emotion wheel and rate each one from 1–100.">
-        <EmotionWheel selectedMoods={record.selectedMoods} onToggle={toggleMood} onIntensity={setMood} />
-      </WorksheetSection>
+        <WorksheetSection title="2. Moods and emotions" prompt="Select multiple moods from the emotion wheel and rate each one from 1–100.">
+          <EmotionWheel selectedMoods={record.selectedMoods} onToggle={toggleMood} onIntensity={setMood} />
+        </WorksheetSection>
 
-      <WorksheetSection title="3. Automatic thought" prompt="What went through your mind? Capture the thought, image, prediction, or meaning exactly as it showed up.">
-        <BigInput value={record.automaticThought} onChangeText={(value) => updateField('automaticThought', value)} placeholder="Example: They do not care about me. I am being ignored." />
-      </WorksheetSection>
+        <WorksheetSection title="3. Automatic thought" prompt="What went through your mind? Capture the thought, image, prediction, or meaning exactly as it showed up.">
+          <BigInput value={record.automaticThought} onChangeText={(value) => updateField('automaticThought', value)} placeholder="Example: They do not care about me. I am being ignored." />
+        </WorksheetSection>
 
-      <WorksheetSection title="4. Evidence for the thought" prompt="List facts that seem to support the automatic thought. Keep this factual rather than interpretive.">
-        <BigInput value={record.evidenceFor} onChangeText={(value) => updateField('evidenceFor', value)} placeholder="What facts make the thought feel true?" />
-      </WorksheetSection>
+        <WorksheetSection title="4. Evidence for the thought" prompt="List facts that seem to support the automatic thought. Keep this factual rather than interpretive.">
+          <BigInput value={record.evidenceFor} onChangeText={(value) => updateField('evidenceFor', value)} placeholder="What facts make the thought feel true?" />
+        </WorksheetSection>
 
-      <WorksheetSection title="5. Evidence against the thought" prompt="List facts that do not fit, complicate, or soften the automatic thought.">
-        <BigInput value={record.evidenceAgainst} onChangeText={(value) => updateField('evidenceAgainst', value)} placeholder="What facts point another way?" />
-      </WorksheetSection>
+        <WorksheetSection title="5. Evidence against the thought" prompt="List facts that do not fit, complicate, or soften the automatic thought.">
+          <BigInput value={record.evidenceAgainst} onChangeText={(value) => updateField('evidenceAgainst', value)} placeholder="What facts point another way?" />
+        </WorksheetSection>
 
-      <WorksheetSection title="6. Balanced alternative thought" prompt="Write a thought that is accurate, compassionate, and not extreme.">
-        <BigInput value={record.balancedThought} onChangeText={(value) => updateField('balancedThought', value)} placeholder="Example: I do not know why they have not replied. It hurts, but there may be other explanations, and I can decide what boundary I need." />
-      </WorksheetSection>
+        <WorksheetSection title="6. Balanced alternative thought" prompt="Write a thought that is accurate, compassionate, and not extreme.">
+          <BigInput value={record.balancedThought} onChangeText={(value) => updateField('balancedThought', value)} placeholder="Example: I do not know why they have not replied. It hurts, but there may be other explanations, and I can decide what boundary I need." />
+        </WorksheetSection>
 
-      <WorksheetSection title="7. Re-rate mood" prompt="After writing the balanced thought, re-rate the moods you selected earlier.">
-        {selectedMoodNames.length === 0 && <Text style={styles.body}>Select moods above first. They will appear here for re-rating.</Text>}
-        {selectedMoodNames.map((mood) => (
-          <View key={mood} style={styles.rerateRow}>
-            <Text style={styles.moodName}>{mood}</Text>
-            <Text style={styles.body}>Before: {record.selectedMoods[mood]}</Text>
-            <TextInput
-              accessibilityLabel={`Re-rate ${mood}`}
-              value={String(record.reratedMoods[mood] ?? record.selectedMoods[mood] ?? 0)}
-              onChangeText={(value) => setRerate(mood, value)}
-              keyboardType="numeric"
-              style={styles.numberInput}
-              className="print-input"
-            />
+        <WorksheetSection title="7. Re-rate mood" prompt="After writing the balanced thought, re-rate the moods you selected earlier.">
+          {selectedMoodNames.length === 0 && <Text style={styles.body}>Select moods above first. They will appear here for re-rating.</Text>}
+          {selectedMoodNames.map((mood) => (
+            <View key={mood} style={styles.rerateRow}>
+              <Text style={styles.moodName}>{mood}</Text>
+              <Text style={styles.body}>Before: {record.selectedMoods[mood]}</Text>
+              <TextInput
+                accessibilityLabel={`Re-rate ${mood}`}
+                value={String(record.reratedMoods[mood] ?? record.selectedMoods[mood] ?? 0)}
+                onChangeText={(value) => setRerate(mood, value)}
+                keyboardType="numeric"
+                style={styles.numberInput}
+              />
+            </View>
+          ))}
+        </WorksheetSection>
+
+        <WorksheetSection title="Optional notes" prompt="Anything you want to remember before saving or printing?">
+          <BigInput value={record.notes} onChangeText={(value) => updateField('notes', value)} placeholder="Supportive next step, boundary, person to call, or reminder." />
+        </WorksheetSection>
+
+        <View style={styles.actionPanel}>
+          <Text style={styles.status}>{status}</Text>
+          <View style={styles.actions}>
+            <Pressable onPress={saveDraft} style={styles.primaryButton}><Text style={styles.primaryButtonText}>Save encrypted draft</Text></Pressable>
+            <Pressable onPress={() => window.print()} style={styles.secondaryButton}><Text style={styles.secondaryButtonText}>Print worksheet</Text></Pressable>
+            <Pressable onPress={clearDraft} style={styles.secondaryButton}><Text style={styles.secondaryButtonText}>Clear draft</Text></Pressable>
           </View>
-        ))}
-      </WorksheetSection>
-
-      <WorksheetSection title="Optional notes" prompt="Anything you want to remember before saving or printing?">
-        <BigInput value={record.notes} onChangeText={(value) => updateField('notes', value)} placeholder="Supportive next step, boundary, person to call, or reminder." />
-      </WorksheetSection>
-
-      <View style={styles.actionPanel} className="screen-only">
-        <Text style={styles.status}>{status}</Text>
-        <View style={styles.actions}>
-          <Pressable onPress={saveDraft} style={styles.primaryButton}><Text style={styles.primaryButtonText}>Save encrypted draft</Text></Pressable>
-          <Pressable onPress={() => window.print()} style={styles.secondaryButton}><Text style={styles.secondaryButtonText}>Print worksheet</Text></Pressable>
-          <Pressable onPress={clearDraft} style={styles.secondaryButton}><Text style={styles.secondaryButtonText}>Clear draft</Text></Pressable>
         </View>
       </View>
+
+      <PrintableThoughtRecord record={record} selectedMoodNames={selectedMoodNames} />
+    </View>
+  );
+}
+
+function PrintableThoughtRecord({ record, selectedMoodNames }) {
+  const selectedMoodSummary = selectedMoodNames.length
+    ? selectedMoodNames.map((mood) => `${mood}: ${record.selectedMoods[mood]} → ${record.reratedMoods[mood] ?? record.selectedMoods[mood]}`).join(', ')
+    : blank;
+
+  return (
+    <View className="print-only print-page">
+      <View className="print-header">
+        <Text className="print-title">Automatic Thought Record</Text>
+        <Text className="print-subtitle">CBT worksheet · Encrypted local draft · Nothing sent to a server</Text>
+      </View>
+
+      <View className="print-row">
+        <Text className="print-label">Date:</Text>
+        <Text className="print-line">________________________</Text>
+        <Text className="print-label">Time:</Text>
+        <Text className="print-line">________________________</Text>
+      </View>
+
+      <PrintField title="1. Situation" value={record.situation} />
+      <PrintField title="2. Moods selected, before → after" value={selectedMoodSummary} compact />
+      <PrintField title="3. Automatic thought" value={record.automaticThought} />
+      <PrintField title="4. Evidence for" value={record.evidenceFor} />
+      <PrintField title="5. Evidence against" value={record.evidenceAgainst} />
+      <PrintField title="6. Balanced alternative thought" value={record.balancedThought} />
+      <PrintField title="7. Optional notes / next step" value={record.notes} compact />
+    </View>
+  );
+}
+
+function PrintField({ title, value, compact = false }) {
+  return (
+    <View className={compact ? 'print-field print-field-compact' : 'print-field'}>
+      <Text className="print-field-title">{title}</Text>
+      <Text className="print-answer">{answerText(value)}</Text>
     </View>
   );
 }
 
 function WorksheetSection({ title, prompt, children }) {
   return (
-    <View style={styles.card} className="print-section">
+    <View style={styles.card}>
       <Text style={styles.h2}>{title}</Text>
       <Text style={styles.body}>{prompt}</Text>
       {children}
@@ -160,7 +205,6 @@ function BigInput({ value, onChangeText, placeholder }) {
       onChangeText={onChangeText}
       placeholder={placeholder}
       style={styles.textArea}
-      className="print-textarea"
     />
   );
 }
@@ -169,13 +213,13 @@ function EmotionWheel({ selectedMoods, onToggle, onIntensity }) {
   return (
     <View style={styles.wheelGrid}>
       {emotionWheelGroups.map((group) => (
-        <View key={group.core} style={styles.emotionGroup} className="print-emotion-group">
+        <View key={group.core} style={styles.emotionGroup}>
           <Text style={styles.coreMood}>{group.core}</Text>
           <View style={styles.moodWrap}>
             {group.moods.map((mood) => {
               const selected = (selectedMoods[mood] ?? 0) > 0;
               return (
-                <View key={mood} style={[styles.moodPill, selected && styles.moodPillSelected]} className="print-chip">
+                <View key={mood} style={[styles.moodPill, selected && styles.moodPillSelected]}>
                   <Pressable onPress={() => onToggle(mood)}>
                     <Text style={[styles.moodText, selected && styles.moodTextSelected]}>{mood}</Text>
                   </Pressable>
@@ -186,7 +230,6 @@ function EmotionWheel({ selectedMoods, onToggle, onIntensity }) {
                       onChangeText={(value) => onIntensity(mood, value)}
                       keyboardType="numeric"
                       style={styles.pillNumberInput}
-                      className="print-input"
                     />
                   )}
                 </View>
@@ -201,8 +244,8 @@ function EmotionWheel({ selectedMoods, onToggle, onIntensity }) {
 
 const styles = StyleSheet.create({
   stack: { gap: 20 },
-  flagshipPanel: { backgroundColor: '#ffffff', borderColor: '#2f6258', borderWidth: 2, borderRadius: 28, padding: 24, gap: 12 },
-  card: { backgroundColor: '#ffffff', borderColor: '#d7ddd9', borderWidth: 1, borderRadius: 22, padding: 20, gap: 12 },
+  flagshipPanel: { backgroundColor: '#ffffff', borderColor: '#2f6258', borderWidth: 2, borderRadius: 28, padding: 24, gap: 12, marginBottom: 20 },
+  card: { backgroundColor: '#ffffff', borderColor: '#d7ddd9', borderWidth: 1, borderRadius: 22, padding: 20, gap: 12, marginBottom: 20 },
   actionPanel: { backgroundColor: '#f8f5ef', borderColor: '#d7ddd9', borderWidth: 1, borderRadius: 22, padding: 20, gap: 12 },
   eyebrow: { color: '#2f6258', fontWeight: '900', letterSpacing: 1, textTransform: 'uppercase' },
   h1: { color: '#18211f', fontSize: 34, lineHeight: 40, fontWeight: '900' },

@@ -1,7 +1,11 @@
+.print-only {
+  display: none;
+}
+
 @media print {
   @page {
     size: letter;
-    margin: 0.55in;
+    margin: 0.35in;
   }
 
   * {
@@ -9,8 +13,6 @@
     color: #000 !important;
     box-shadow: none !important;
     text-shadow: none !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
   }
 
   html,
@@ -20,6 +22,7 @@
     padding: 0 !important;
     min-height: auto !important;
     background: #fff !important;
+    font-family: Arial, Helvetica, sans-serif !important;
   }
 
   .screen-only,
@@ -27,69 +30,85 @@
     display: none !important;
   }
 
-  .print-page,
-  [data-print-page='thought-record'] {
-    max-width: none !important;
+  .print-only {
+    display: block !important;
+  }
+
+  .print-page {
     width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
     padding: 0 !important;
-    gap: 0 !important;
+    font-size: 9pt !important;
+    line-height: 1.22 !important;
   }
 
-  .print-intro,
-  [data-print-section='intro'] {
-    border: 2px solid #000 !important;
-    border-radius: 0 !important;
-    padding: 14pt !important;
-    margin: 0 0 14pt !important;
-    page-break-after: avoid;
+  .print-header {
+    border-bottom: 2px solid #000 !important;
+    margin-bottom: 8pt !important;
+    padding-bottom: 5pt !important;
   }
 
-  .print-section,
-  [data-print-section='worksheet-section'] {
+  .print-title {
+    display: block !important;
+    font-size: 18pt !important;
+    line-height: 1.1 !important;
+    font-weight: 800 !important;
+    margin: 0 0 2pt !important;
+  }
+
+  .print-subtitle {
+    display: block !important;
+    font-size: 8.5pt !important;
+    line-height: 1.2 !important;
+    margin: 0 !important;
+  }
+
+  .print-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8pt !important;
+    margin: 0 0 8pt !important;
+  }
+
+  .print-label,
+  .print-line {
+    display: inline !important;
+    font-size: 9pt !important;
+  }
+
+  .print-label {
+    font-weight: 800 !important;
+  }
+
+  .print-field {
     border: 1px solid #000 !important;
-    border-radius: 0 !important;
-    padding: 12pt !important;
-    margin: 0 0 12pt !important;
-    page-break-inside: avoid;
-    break-inside: avoid;
+    padding: 6pt !important;
+    margin: 0 0 6pt !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    min-height: 0.72in !important;
   }
 
-  .print-emotion-group,
-  [data-print-section='emotion-group'] {
-    border: 1px solid #000 !important;
-    border-radius: 0 !important;
-    padding: 8pt !important;
-    page-break-inside: avoid;
-    break-inside: avoid;
+  .print-field-compact {
+    min-height: 0.32in !important;
   }
 
-  .print-input,
-  input,
-  textarea,
-  [contenteditable='true'] {
-    border: 1px solid #000 !important;
-    border-radius: 0 !important;
+  .print-field-title {
+    display: block !important;
+    font-size: 9.5pt !important;
+    line-height: 1.15 !important;
+    font-weight: 800 !important;
+    margin: 0 0 3pt !important;
   }
 
-  .print-textarea,
-  [data-print-input='textarea'] {
-    min-height: 1in !important;
-    border: 1px solid #000 !important;
-    border-radius: 0 !important;
-    padding: 8pt !important;
+  .print-answer {
+    display: block !important;
+    font-size: 9pt !important;
+    line-height: 1.22 !important;
     white-space: pre-wrap !important;
-  }
-
-  .print-chip,
-  [data-print-chip='true'] {
-    border: 1px solid #000 !important;
-    border-radius: 0 !important;
-    padding: 3pt 5pt !important;
-  }
-
-  .print-muted,
-  [data-print-muted='true'] {
-    border-color: #777 !important;
+    overflow-wrap: anywhere !important;
   }
 
   h1,
