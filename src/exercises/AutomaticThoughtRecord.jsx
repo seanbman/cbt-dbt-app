@@ -4,9 +4,15 @@ import { clearCookie, readEncryptedCookie, writeEncryptedCookie } from '../stora
 import { automaticThoughtRecord, emotionWheelGroups, emptyThoughtRecord } from './automaticThoughtRecord.js';
 
 const cookieName = 'steadyStepsAutomaticThoughtRecord.v1';
-const blank = '________________________________________________________________________________';
+const exampleEmotions = ['Angry', 'Sad', 'Anxious', 'Ashamed', 'Guilty', 'Lonely', 'Hurt', 'Afraid', 'Disappointed', 'Jealous', 'Frustrated', 'Overwhelmed', 'Hopeful', 'Calm', 'Proud', 'Grateful'];
+const blankLine = '________________________________________________________________________________________________';
 
-const answerText = (value) => String(value ?? '').trim() || blank;
+const answerText = (value, fallback = blankLine) => String(value ?? '').trim() || fallback;
+const toTen = (value) => {
+  const number = Number(value);
+  if (!Number.isFinite(number) || number <= 0) return '';
+  return String(Math.min(10, Math.max(0, Math.round(number > 10 ? number / 10 : number))));
+};
 
 export default function AutomaticThoughtRecord() {
   const [record, setRecord] = useState(emptyThoughtRecord);
@@ -143,45 +149,79 @@ export default function AutomaticThoughtRecord() {
         </View>
       </View>
 
-      <PrintableThoughtRecord record={record} selectedMoodNames={selectedMoodNames} />
+      <PrintableWorksheet record={record} selectedMoodNames={selectedMoodNames} />
     </View>
   );
 }
 
-function PrintableThoughtRecord({ record, selectedMoodNames }) {
-  const selectedMoodSummary = selectedMoodNames.length
-    ? selectedMoodNames.map((mood) => `${mood}: ${record.selectedMoods[mood]} → ${record.reratedMoods[mood] ?? record.selectedMoods[mood]}`).join(', ')
-    : blank;
+function PrintableWorksheet({ record, selectedMoodNames }) {
+  const rows = [...selectedMoodNames, '', '', '', ''].slice(0, 4);
 
   return (
-    <View className="print-only print-page">
+    <View className="printable-worksheet">
       <View className="print-header">
         <Text className="print-title">Automatic Thought Record</Text>
-        <Text className="print-subtitle">CBT worksheet · Encrypted local draft · Nothing sent to a server</Text>
+        <Text className="print-purpose">Purpose: slow down, name the trigger, identify emotions and thoughts, choose a skillful response, and reflect on what changed.</Text>
       </View>
 
-      <View className="print-row">
-        <Text className="print-label">Date:</Text>
-        <Text className="print-line">________________________</Text>
-        <Text className="print-label">Time:</Text>
-        <Text className="print-line">________________________</Text>
+      <View className="print-meta-row">
+        <Text>Date: ____________________</Text>
+        <Text>Time: ____________________</Text>
       </View>
 
-      <PrintField title="1. Situation" value={record.situation} />
-      <PrintField title="2. Moods selected, before → after" value={selectedMoodSummary} compact />
-      <PrintField title="3. Automatic thought" value={record.automaticThought} />
-      <PrintField title="4. Evidence for" value={record.evidenceFor} />
-      <PrintField title="5. Evidence against" value={record.evidenceAgainst} />
-      <PrintField title="6. Balanced alternative thought" value={record.balancedThought} />
-      <PrintField title="7. Optional notes / next step" value={record.notes} compact />
+      <View className="print-section print-avoid-break">
+        <Text className="print-section-title">1. Situation / trigger</Text>
+        <Text className="print-answer">{answerText(record.situation)}</Text>
+      </View>
+
+      <View className="print-section print-avoid-break">
+        <Text className="print-section-title">2. Pick emotions</Text>
+        <Text className="print-small">Examples: {exampleEmotions.join(', ')}</Text>
+        <View className="print-rating-table">
+          <View className="print-table-row print-table-head">
+            <Text>Emotion</Text>
+            <Text>Before 0–10</Text>
+            <Text>After 0–10</Text>
+          </View>
+          {rows.map((mood, index) => (
+            <View className="print-table-row" key={`${mood || 'blank'}-${index}`}>
+              <Text>{mood || '________________'}</Text>
+              <Text>{mood ? toTen(record.selectedMoods[mood]) : '____'}</Text>
+              <Text>{mood ? toTen(record.reratedMoods[mood] ?? record.selectedMoods[mood]) : '____'}</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+
+      <View className="print-grid-two">
+        <PrintField title="3. Thoughts / beliefs" value={record.automaticThought} />
+        <PrintField title="4. Body sensations / urges" value="" />
+      </View>
+
+      <View className="print-grid-two">
+        <PrintField title="5. Evidence for" value={record.evidenceFor} />
+        <PrintField title="6. Evidence against" value={record.evidenceAgainst} />
+      </View>
+
+      <View className="print-section print-avoid-break">
+        <Text className="print-section-title">7. Balanced thought / skill or response chosen</Text>
+        <Text className="print-answer">{answerText(record.balancedThought)}</Text>
+        <Text className="print-line-label">Skill or response chosen: ______________________________________________________________________</Text>
+      </View>
+
+      <View className="print-section print-avoid-break">
+        <Text className="print-section-title">8. Reflection</Text>
+        <Text className="print-small">What changed? What helped? What will I try next time?</Text>
+        <Text className="print-answer">{answerText(record.notes)}</Text>
+      </View>
     </View>
   );
 }
 
-function PrintField({ title, value, compact = false }) {
+function PrintField({ title, value }) {
   return (
-    <View className={compact ? 'print-field print-field-compact' : 'print-field'}>
-      <Text className="print-field-title">{title}</Text>
+    <View className="print-section print-avoid-break">
+      <Text className="print-section-title">{title}</Text>
       <Text className="print-answer">{answerText(value)}</Text>
     </View>
   );
