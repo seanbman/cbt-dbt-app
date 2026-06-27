@@ -7,6 +7,7 @@ import { buildExerciseSearch, parseRoute, readFilterParams, routes } from './rou
 
 const crisisCopy = 'If you may hurt yourself or someone else, call 9-1-1 now. In Canada and the U.S., call or text 9-8-8 for suicide crisis support.';
 const thoughtRecordPath = `${routes.exercises}/${automaticThoughtRecord.slug}`;
+const privacyCopy = 'Answers are encrypted with browser Web Crypto before being stored in a cookie on this device. Nothing is sent to a server.';
 
 const getLocationState = () => ({ pathname: window.location.pathname, search: window.location.search });
 
@@ -35,7 +36,7 @@ export default function App() {
         {route.name === 'check-in' && <PlaceholderPage title="Check-in" body="Check-in questions are planned for a later phase. For now, start with the Automatic Thought Record or browse the exercise library." navigate={navigate} />}
         {route.name === 'exercises' && <ExerciseLibrary location={location} navigate={navigate} />}
         {route.name === 'exercise-detail' && <ExerciseDetail slug={route.slug} navigate={navigate} />}
-        {route.name === 'saved' && <PlaceholderPage title="Saved sessions" body="The Automatic Thought Record now saves its draft into an encrypted cookie on this browser. A broader saved-sessions screen remains later-phase work." navigate={navigate} />}
+        {route.name === 'saved' && <PlaceholderPage title="Saved sessions" body="The Automatic Thought Record now saves an encrypted draft in this browser. A broader saved-sessions screen remains later-phase work." navigate={navigate} />}
         {route.name === 'about' && <About />}
         {route.name === 'help' && <Help />}
         {route.name === 'not-found' && <NotFound navigate={navigate} />}
@@ -76,7 +77,8 @@ function Home({ navigate }) {
       <View style={styles.hero}>
         <Text style={styles.eyebrow}>Flagship CBT exercise</Text>
         <Text style={styles.h1}>Start with the Automatic Thought Record.</Text>
-        <Text style={styles.lead}>Use an emotion wheel to select multiple moods, identify the automatic thought, examine evidence, write a balanced alternative thought, and save the draft in an encrypted browser cookie.</Text>
+        <Text style={styles.lead}>Use an emotion wheel to select multiple moods, identify the automatic thought, examine evidence, write a balanced alternative thought, and save an encrypted local draft.</Text>
+        <Text style={styles.privacyNote}>{privacyCopy}</Text>
         <View style={styles.buttonRow}>
           <Pressable onPress={() => navigate(thoughtRecordPath)} style={styles.primaryButton}><Text style={styles.primaryButtonText}>Start thought record</Text></Pressable>
           <Pressable onPress={() => navigate(routes.exercises)} style={styles.secondaryButton}><Text style={styles.secondaryButtonText}>Browse all exercises</Text></Pressable>
@@ -84,8 +86,8 @@ function Home({ navigate }) {
       </View>
       <View style={styles.grid}>
         <Feature title="No login" body="No accounts, cloud profiles, or server-side worksheet answer storage." />
-        <Feature title="Encrypted cookie draft" body="The thought record stores ciphertext in a browser cookie using a device-local Web Crypto key." />
-        <Feature title="Print-friendly" body="The thought record can be printed after completion for offline review." />
+        <Feature title="Encrypted local draft" body="The thought record saves an encrypted draft in this browser so the user can return to it later." />
+        <Feature title="Print-friendly" body="The thought record prints in clean black and white for offline review." />
       </View>
     </View>
   );
@@ -162,7 +164,7 @@ function FeaturedExerciseCard({ navigate }) {
       <View style={styles.metaRow}>
         <Text style={styles.meta}>20 min</Text>
         <Text style={styles.meta}>CBT</Text>
-        <Text style={styles.meta}>encrypted cookie draft</Text>
+        <Text style={styles.meta}>encrypted local draft</Text>
       </View>
       <Pressable onPress={() => navigate(thoughtRecordPath)} style={styles.primaryButton}><Text style={styles.primaryButtonText}>Open flagship exercise</Text></Pressable>
     </View>
@@ -229,7 +231,7 @@ function PlaceholderPage({ title, body, navigate }) {
 }
 
 function About() {
-  return <View style={styles.stackLarge}><Text style={styles.h1}>About Steady Steps</Text><Text style={styles.lead}>This app is a no-login, privacy-first toolbox for CBT, DBT-informed, SMART Recovery-informed, and recovery-focused exercises.</Text><Text style={styles.body}>The flagship Automatic Thought Record stores encrypted draft data in a browser cookie on this device. It does not send answers to a server.</Text></View>;
+  return <View style={styles.stackLarge}><Text style={styles.h1}>About Steady Steps</Text><Text style={styles.lead}>This app is a no-login, privacy-first toolbox for CBT, DBT-informed, SMART Recovery-informed, and recovery-focused exercises.</Text><Text style={styles.body}>{privacyCopy}</Text></View>;
 }
 
 function Help() {
@@ -267,6 +269,7 @@ const styles = StyleSheet.create({
   h3: { fontSize: 20, color: colors.ink, fontWeight: '800' },
   lead: { fontSize: 18, lineHeight: 28, color: colors.muted },
   body: { fontSize: 16, lineHeight: 24, color: colors.muted },
+  privacyNote: { fontSize: 15, lineHeight: 23, color: colors.accent, fontWeight: '800' },
   buttonRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   primaryButton: { alignSelf: 'flex-start', backgroundColor: colors.accent, borderRadius: 999, paddingVertical: 12, paddingHorizontal: 18 },
   primaryButtonText: { color: '#fff', fontWeight: '800' },

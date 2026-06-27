@@ -7,13 +7,13 @@ const cookieName = 'steadyStepsAutomaticThoughtRecord.v1';
 
 export default function AutomaticThoughtRecord() {
   const [record, setRecord] = useState(emptyThoughtRecord);
-  const [status, setStatus] = useState('Encrypted cookie draft is ready.');
+  const [status, setStatus] = useState('Encrypted local draft is ready.');
 
   useEffect(() => {
     readEncryptedCookie(cookieName).then((saved) => {
       if (saved) {
         setRecord({ ...emptyThoughtRecord, ...saved });
-        setStatus('Loaded encrypted cookie draft from this browser.');
+        setStatus('Loaded encrypted local draft from this browser.');
       }
     });
   }, []);
@@ -63,25 +63,25 @@ export default function AutomaticThoughtRecord() {
   const saveDraft = async () => {
     try {
       await writeEncryptedCookie(cookieName, record);
-      setStatus('Saved encrypted cookie draft in this browser.');
+      setStatus('Saved encrypted local draft in this browser.');
     } catch (error) {
-      setStatus(error.message || 'Could not save encrypted cookie draft.');
+      setStatus(error.message || 'Could not save encrypted local draft.');
     }
   };
 
   const clearDraft = () => {
     clearCookie(cookieName);
     setRecord(emptyThoughtRecord);
-    setStatus('Cleared this encrypted cookie draft.');
+    setStatus('Cleared this encrypted local draft.');
   };
 
   return (
-    <View style={styles.stack}>
-      <View style={styles.flagshipPanel}>
+    <View style={styles.stack} className="print-page">
+      <View style={styles.flagshipPanel} className="print-intro">
         <Text style={styles.eyebrow}>Flagship CBT exercise</Text>
         <Text style={styles.h1}>{automaticThoughtRecord.title}</Text>
         <Text style={styles.lead}>{automaticThoughtRecord.description}</Text>
-        <Text style={styles.privacy}>Answers are encrypted with browser Web Crypto before being stored in a cookie on this device. Nothing is sent to a server.</Text>
+        <Text style={styles.privacy}>Your draft is encrypted and saved only on this device. Nothing is sent to a server.</Text>
       </View>
 
       <WorksheetSection title="1. Situation" prompt="Where were you, who was involved, and what happened?">
@@ -120,6 +120,7 @@ export default function AutomaticThoughtRecord() {
               onChangeText={(value) => setRerate(mood, value)}
               keyboardType="numeric"
               style={styles.numberInput}
+              className="print-input"
             />
           </View>
         ))}
@@ -129,10 +130,10 @@ export default function AutomaticThoughtRecord() {
         <BigInput value={record.notes} onChangeText={(value) => updateField('notes', value)} placeholder="Supportive next step, boundary, person to call, or reminder." />
       </WorksheetSection>
 
-      <View style={styles.actionPanel}>
+      <View style={styles.actionPanel} className="screen-only">
         <Text style={styles.status}>{status}</Text>
         <View style={styles.actions}>
-          <Pressable onPress={saveDraft} style={styles.primaryButton}><Text style={styles.primaryButtonText}>Save encrypted cookie draft</Text></Pressable>
+          <Pressable onPress={saveDraft} style={styles.primaryButton}><Text style={styles.primaryButtonText}>Save encrypted draft</Text></Pressable>
           <Pressable onPress={() => window.print()} style={styles.secondaryButton}><Text style={styles.secondaryButtonText}>Print worksheet</Text></Pressable>
           <Pressable onPress={clearDraft} style={styles.secondaryButton}><Text style={styles.secondaryButtonText}>Clear draft</Text></Pressable>
         </View>
@@ -143,7 +144,7 @@ export default function AutomaticThoughtRecord() {
 
 function WorksheetSection({ title, prompt, children }) {
   return (
-    <View style={styles.card}>
+    <View style={styles.card} className="print-section">
       <Text style={styles.h2}>{title}</Text>
       <Text style={styles.body}>{prompt}</Text>
       {children}
@@ -159,6 +160,7 @@ function BigInput({ value, onChangeText, placeholder }) {
       onChangeText={onChangeText}
       placeholder={placeholder}
       style={styles.textArea}
+      className="print-textarea"
     />
   );
 }
@@ -167,13 +169,13 @@ function EmotionWheel({ selectedMoods, onToggle, onIntensity }) {
   return (
     <View style={styles.wheelGrid}>
       {emotionWheelGroups.map((group) => (
-        <View key={group.core} style={styles.emotionGroup}>
+        <View key={group.core} style={styles.emotionGroup} className="print-emotion-group">
           <Text style={styles.coreMood}>{group.core}</Text>
           <View style={styles.moodWrap}>
             {group.moods.map((mood) => {
               const selected = (selectedMoods[mood] ?? 0) > 0;
               return (
-                <View key={mood} style={[styles.moodPill, selected && styles.moodPillSelected]}>
+                <View key={mood} style={[styles.moodPill, selected && styles.moodPillSelected]} className="print-chip">
                   <Pressable onPress={() => onToggle(mood)}>
                     <Text style={[styles.moodText, selected && styles.moodTextSelected]}>{mood}</Text>
                   </Pressable>
@@ -184,6 +186,7 @@ function EmotionWheel({ selectedMoods, onToggle, onIntensity }) {
                       onChangeText={(value) => onIntensity(mood, value)}
                       keyboardType="numeric"
                       style={styles.pillNumberInput}
+                      className="print-input"
                     />
                   )}
                 </View>
