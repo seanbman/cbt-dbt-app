@@ -1,18 +1,11 @@
-.print-only {
+.printable-worksheet {
   display: none;
 }
 
 @media print {
   @page {
     size: letter;
-    margin: 0.35in;
-  }
-
-  * {
-    background: #fff !important;
-    color: #000 !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
+    margin: 0.3in;
   }
 
   html,
@@ -25,96 +18,144 @@
     font-family: Arial, Helvetica, sans-serif !important;
   }
 
+  * {
+    background: #fff !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
   .screen-only,
-  [data-screen-only='true'] {
+  .screen-only *,
+  [data-screen-only='true'],
+  #root > div > div:first-child,
+  #root > div > div:last-child {
     display: none !important;
   }
 
-  .print-only {
-    display: block !important;
-  }
-
-  .print-page {
+  #root > div,
+  #root > div > div,
+  #root > div > div > div {
     width: 100% !important;
     max-width: none !important;
     margin: 0 !important;
     padding: 0 !important;
-    font-size: 9pt !important;
-    line-height: 1.22 !important;
+    min-height: auto !important;
+    overflow: visible !important;
+  }
+
+  .printable-worksheet {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 8.4pt !important;
+    line-height: 1.15 !important;
   }
 
   .print-header {
     border-bottom: 2px solid #000 !important;
-    margin-bottom: 8pt !important;
-    padding-bottom: 5pt !important;
+    padding-bottom: 4pt !important;
+    margin-bottom: 5pt !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 
   .print-title {
     display: block !important;
-    font-size: 18pt !important;
+    font-size: 16pt !important;
+    line-height: 1.05 !important;
+    font-weight: 800 !important;
+    margin: 0 0 2pt !important;
+  }
+
+  .print-purpose,
+  .print-small,
+  .print-line-label {
+    display: block !important;
+    font-size: 7.8pt !important;
+    line-height: 1.15 !important;
+    margin: 0 !important;
+  }
+
+  .print-meta-row {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    gap: 10pt !important;
+    font-size: 8pt !important;
+    margin: 0 0 5pt !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .print-section {
+    border: 1px solid #000 !important;
+    padding: 4pt !important;
+    margin: 0 0 4pt !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .print-section-title {
+    display: block !important;
+    font-size: 8.6pt !important;
     line-height: 1.1 !important;
     font-weight: 800 !important;
     margin: 0 0 2pt !important;
   }
 
-  .print-subtitle {
+  .print-answer {
     display: block !important;
-    font-size: 8.5pt !important;
-    line-height: 1.2 !important;
+    font-size: 8.2pt !important;
+    line-height: 1.18 !important;
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
     margin: 0 !important;
   }
 
-  .print-row {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: 8pt !important;
-    margin: 0 0 8pt !important;
-  }
-
-  .print-label,
-  .print-line {
-    display: inline !important;
-    font-size: 9pt !important;
-  }
-
-  .print-label {
-    font-weight: 800 !important;
-  }
-
-  .print-field {
-    border: 1px solid #000 !important;
-    padding: 6pt !important;
-    margin: 0 0 6pt !important;
-    page-break-inside: avoid !important;
+  .print-grid-two {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 4pt !important;
     break-inside: avoid !important;
-    min-height: 0.72in !important;
+    page-break-inside: avoid !important;
   }
 
-  .print-field-compact {
-    min-height: 0.32in !important;
+  .print-rating-table {
+    display: table !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 3pt !important;
+    font-size: 8pt !important;
   }
 
-  .print-field-title {
-    display: block !important;
-    font-size: 9.5pt !important;
-    line-height: 1.15 !important;
+  .print-table-row {
+    display: table-row !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .print-table-row > * {
+    display: table-cell !important;
+    border: 1px solid #000 !important;
+    padding: 2pt 3pt !important;
+  }
+
+  .print-table-head > * {
     font-weight: 800 !important;
-    margin: 0 0 3pt !important;
   }
 
-  .print-answer {
-    display: block !important;
-    font-size: 9pt !important;
-    line-height: 1.22 !important;
-    white-space: pre-wrap !important;
-    overflow-wrap: anywhere !important;
+  .print-avoid-break {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 
   h1,
   h2,
   h3,
   p {
-    page-break-after: avoid;
+    page-break-after: avoid !important;
   }
 }
